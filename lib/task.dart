@@ -20,7 +20,7 @@ class Task {
 
 //  Bu funksiya db uchun Task ni Map ko'rinishiga o'zgartiradi
   Map<String, dynamic> toMap() {
-    final map = Map<String, dynamic>();
+    final map = <String, dynamic>{};
     if (id != null) map["id"] = id;
 
     map["title"] = title;

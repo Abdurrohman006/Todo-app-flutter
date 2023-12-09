@@ -5,6 +5,8 @@ import 'package:todo_app/add_task_screen.dart';
 import 'package:todo_app/database_helper.dart';
 import 'package:todo_app/task.dart';
 
+import 'main.dart';
+
 class TaskListScreen extends StatefulWidget {
   const TaskListScreen({super.key});
 
@@ -18,7 +20,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   Widget _buildItem(Task task) {
     return Container(
-      color: Color.fromARGB(45, 0, 0, 0),
+      color: const Color.fromARGB(45, 0, 0, 0),
       child: ListTile(
         onTap: () => Navigator.push(
           context,
@@ -74,7 +76,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 Navigator.pop(context);
               },
               child: const Text(
-                "Dont allow",
+                "Dont Allow",
                 style: TextStyle(color: Colors.green, fontSize: 10),
               ),
             ),
@@ -85,7 +87,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                     .then((value) => Navigator.pop(context));
               },
               child: const Text(
-                "allow",
+                "Allow",
                 style: TextStyle(color: Colors.green, fontSize: 10),
               ),
             ),
@@ -93,6 +95,45 @@ class _TaskListScreenState extends State<TaskListScreen> {
         ),
       );
     });
+
+    AwesomeNotifications().setListeners(
+      onActionReceivedMethod: (ReceivedAction receivedAction) async {
+        NotificationController.onActionReceivedMethod(receivedAction);
+      },
+      onNotificationCreatedMethod:
+          (ReceivedNotification receivedNotification) async {
+        NotificationController.onNotificationCreatedMethod(
+            receivedNotification);
+      },
+      onNotificationDisplayedMethod:
+          (ReceivedNotification receivedNotification) async {
+        NotificationController.onNotificationDisplayedMethod(
+            receivedNotification);
+      },
+      onDismissActionReceivedMethod: (ReceivedAction receivedAction) async {
+        NotificationController.onDismissActionReceivedMethod(receivedAction);
+      },
+    );
+
+    // AwesomeNotifications().createdStream.listen((notification) {
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Notification created")),);
+    // });
+
+    // @pragma("vm:entry-point")
+    // Future<void> onNotificationCreatedMethod(
+    //     ReceivedNotification receivedNotification) async {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text("Notification created")),
+    //   );
+    // }
+    //
+    // @pragma("vm:entry-point")
+    // Future<void> onNotificationDisplayedMethod(
+    //     ReceivedNotification receivedNotification) async {
+    //   AwesomeNotifications()
+    //       .getGlobalBadgeCounter()
+    //       .then((value) => AwesomeNotifications().setGlobalBadgeCounter(value));
+    // }
 
     _updateTaskList();
   }

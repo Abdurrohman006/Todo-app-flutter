@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/database_helper.dart';
+import 'package:todo_app/notifications.dart';
 import 'package:todo_app/task.dart';
 
 class AddTaskScreen extends StatefulWidget {
@@ -10,6 +11,7 @@ class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({this.updateTaskList, this.task});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AddTaskScreenState createState() => _AddTaskScreenState();
 }
 
@@ -23,9 +25,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   TimeOfDay _selectedTime = TimeOfDay(hour: 00, minute: 00);
 
   DateTime _date = DateTime.now();
-  TextEditingController _dateController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
 
-  TextEditingController _timeController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
 
   final DateFormat _dateFormat = DateFormat("MMM dd, yyyy");
   final DateFormat _timeFormat = DateFormat("hh:mm");
@@ -57,6 +59,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       setState(() {
         _selectedTime = timePicked;
         _hour = _selectedTime.hour.toString();
+
         _minute = _selectedTime.minute.toString();
         _time = _hour! + " : " + _minute!;
         _dateWithTime = DateTime(_date.year, _date.month, _date.day,
@@ -72,6 +75,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       _formKey.currentState!.save();
 
       Task task = Task(title: _title, date: _dateWithTime, priority: _priority);
+
+      createReminderNotification(task);
 
       if (widget.task == null) {
         // insert database
@@ -107,9 +112,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       _title = widget.task!.title;
       _date = widget.task!.date;
       _priority = widget.task!.priority;
+      _dateWithTime = widget.task!.date;
     }
 
     _dateController.text = _dateFormat.format(_date);
+    _timeController.text = _timeFormat.format(_dateWithTime);
   }
 
   @override
@@ -156,7 +163,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         ),
                       ),
                       DropdownButtonFormField(
-                        icon: Icon(Icons.arrow_drop_down),
+                        icon: const Icon(Icons.arrow_drop_down),
                         decoration: InputDecoration(labelText: "Priority"),
                         onChanged: (value) {
                           setState(() {

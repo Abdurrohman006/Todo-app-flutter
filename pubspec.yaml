@@ -37,7 +37,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   sqflite: ^2.2.8+1
-  intl: ^0.18.1
+  intl: ^0.17.0
   path_provider: ^2.0.14
   awesome_notifications: ^0.7.4+1
 
